@@ -1,0 +1,6 @@
+[deps]
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+KEEP = "43413fff-ad5b-4266-9485-4ac3dd215f36"
+
+[compat]
+Documenter = "1"
