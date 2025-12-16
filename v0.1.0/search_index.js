@@ -1,0 +1,3 @@
+var documenterSearchIndex = {"docs":
+[{"location":"index.html#KEEP","page":"Introduction","title":"KEEP","text":"Documentation for KEEP.","category":"section"},{"location":"index.html#Reproducibility","page":"Introduction","title":"Reproducibility","text":"_downloads_toml(\".\") # hide\n\n<details style=\"margin-bottom: 0.5em; margin-top: 1em;\"><summary>ℹ️ Version info</summary>\n\nversioninfo() # hide\n\n</details>\n\n<details style=\"margin-bottom: 0.5em;\"><summary>📦 Package status</summary>\n\nPkg.status() # hide\n\n</details>\n\n<details style=\"margin-bottom: 0.5em;\"><summary>📚 Complete manifest</summary>\n\nPkg.status(; mode = PKGMODE_MANIFEST) # hide\n\n</details>","category":"section"}]
+}
