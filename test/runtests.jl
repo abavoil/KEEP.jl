@@ -18,9 +18,14 @@ exclude = [
 ]
 
 only = [
-# "04b_cl_cd_post_processing.jl",
-# "05_steady_states.jl",
-# "05b_equilibriums.jl",
+    #"04b_cl_cd_post_processing.jl",
+    #"05_steady_states.jl",
+    #"05b_equilibriums.jl",
+    #"06c_all_limit_cycles.jl",
+    #"06d_counting_cycles.jl",
+    #"07_optimization_examples.jl",
+    #"07b_no_constraint_optim.jl",
+    #"07d_sparse_optim_variants.jl",
 ]
 
 function is_excluded(filename, pattern, exclude, only)
