@@ -148,7 +148,9 @@ plot(Cz, Cx, line_z=t, lw=20 * Cx ./ Cz, label="",
 # color=:black, clabels=true, colorbar=false)
 
 # ## Enregistrer les résultats
-# open("./coeff_aero.csv", "w") do io
-#     write(io, "t (s), θ, φ, Fx (N), Fy (N), Fz (N), Cx, Cy, Cz\n")
-#     writedlm(io, stack([t, θ, φ, Fx, Fy, Fz, Cx, Cy, Cz]), ", ")
-# end
+if false
+    open("./coeff_aero.csv", "w") do io
+        write(io, "t (s), θ, φ, Fx (N), Fy (N), Fz (N), Cx, Cy, Cz\n")
+        writedlm(io, stack([t, θ, φ, Fx, Fy, Fz, Cx, Cy, Cz]), ", ")
+    end
+end
