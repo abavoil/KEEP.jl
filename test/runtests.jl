@@ -7,10 +7,7 @@ using ProgressBars
 dirs = ["unit", "examples"]  # publication has a lot of prints, redefine println to do nothing ?
 
 exclude = [
-    "04b_cl_cd_post_processing.jl",  # Needs updating for using new limit cycle and integration API
-    "05_steady_states.jl",  # Broken eight/circle plots
-    "05b_equilibriums.jl",  # Broken eight/circle plots
-    "06c_all_limit_cycles.jl",  # Needs updating for using new limit cycle and integration API
+    "06c_all_limit_cycles.jl",  # It's all been integrated into src/LimitCycles.jl probably, needs updating for using new limit cycle and integration API
     "06d_counting_cycles.jl",  # Humoungous error, mayeb rewrite it one day ?
     "07_optimization_examples.jl",  # Slow AND broken, see ECC paper for parametric optimization
     "07b_no_constraint_optim.jl",  # Needs updating for using new limit cycle and integration API
@@ -18,9 +15,6 @@ exclude = [
 ]
 
 only = [
-    #"04b_cl_cd_post_processing.jl",
-    #"05_steady_states.jl",
-    #"05b_equilibriums.jl",
     #"06c_all_limit_cycles.jl",
     #"06d_counting_cycles.jl",
     #"07_optimization_examples.jl",

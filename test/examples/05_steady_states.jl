@@ -59,18 +59,18 @@ steady_states_QM .= steady_states_QM[:, sortperm([-cos(α) for (α, _) in eachco
 
 # true to plot one at a time, by hand
 i = 0
-p_plot = VIS.init_plot_eight_circle(vbp)
+p_plot, p_plot_vbp = VIS.init_plot_eight_circle(vbp)
 if false
-    VIS.add_point_plot_eight_circle!(steady_states[:, @show i += 1], p_plot)
+    VIS.add_point_plot_eight_circle!(steady_states[:, @show i += 1], p_plot_vbp)
 end
 
 # Plot all at once
-p_plot = VIS.init_plot_eight_circle(vbp)
+p_plot, p_plot_vbp = VIS.init_plot_eight_circle(vbp)
 for ss in reverse(eachcol(steady_states))
     local col, ls, lw = ifelse(cos(ss[1]) > 0,
         (:green, :solid, 3),
         (:red, :dash, 2))
-    VIS.add_point_plot_eight_circle!(ss, p_plot, color=col, linestyle=ls, linewidth=lw, marker=:blue, markersize=4)
+    VIS.add_point_plot_eight_circle!(ss, p_plot_vbp, color=col, linestyle=ls, linewidth=lw, marker=:blue, markersize=4)
 end
 plot!(title="8 equilibriums")
 display(plot!())
@@ -82,11 +82,11 @@ split_ss = [filter(ss -> cos(ss[1]) > 0, eachcol(steady_states)), filter(ss -> c
 if false
     anim = @animate for steady_states in split_ss
         @show steady_states
-        p_plot = VIS.init_plot_eight_circle(vbp)
+        p_plot, p_plot_vbp = VIS.init_plot_eight_circle(vbp)
         col, ls, lw = ifelse(cos(steady_states[1][1]) > 0,
             (:green, :solid, 3),
             (:red, :solid, 2))
-        VIS.add_point_plot_eight_circle!.(steady_states, Ref(p_plot), color=col, linestyle=ls, linewidth=lw, marker=:blue, markersize=4)
+        VIS.add_point_plot_eight_circle!.(steady_states, Ref(p_plot_vbp), color=col, linestyle=ls, linewidth=lw, marker=:blue, markersize=4)
         plot!(title="8 equilibriums")
     end
     display(gif(anim, fps=1 / 2))
@@ -94,8 +94,8 @@ if false
 
     # Animation one by one
     anim = @animate for (i, ss) in enumerate(eachcol(steady_states))
-        p_plot = VIS.init_plot_eight_circle(vbp)
-        VIS.add_point_plot_eight_circle!(ss, p_plot, color=ifelse(cos(ss[1]) > 0, :green, :red), marker=:blue, lw=2)
+        p_plot, p_plot_vbp = VIS.init_plot_eight_circle(vbp)
+        VIS.add_point_plot_eight_circle!(ss, p_plot_vbp, color=ifelse(cos(ss[1]) > 0, :green, :red), marker=:blue, lw=2)
         plot!(title="Equilibrium $i")
     end
     display(gif(anim, fps=1))

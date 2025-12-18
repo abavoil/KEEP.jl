@@ -191,13 +191,6 @@ TODO:
  - draw eight_circle
 =#
 
-# function add_state_to_plot_eight_circle(q, plot_vbp; fig=plot!(), plot_kwargs)
-#     α, τ = q
-#     θ, φ = PM4.τ_to_θφ(τ, plot_vbp)
-#     x, y, _ = plot_vbp.l * PM4.compute_αhat(α)
-#     plot!(fig, [0, y, φ], [0, x, θ]; m=:circle, mc=:blue, plot_kwargs...)
-# end
-
 function plot_eight_circle(qs, vbp; plot_kwargs=())
     plot_kwargs_arr = ifelse(
         isa(plot_kwargs, AbstractVector),
@@ -207,7 +200,7 @@ function plot_eight_circle(qs, vbp; plot_kwargs=())
 
     fig, plot_vbp = init_plot_eight_circle(vbp)
     for (q, plot_kwargs) in zip(qs, plot_kwargs_arr)
-        add_state_to_plot_eight_circle(q, plot_vbp; fig=fig, plot_kwargs=plot_kwargs)
+        add_point_plot_eight_circle!(q, plot_vbp; plot_kwargs...)
     end
 
     return fig
