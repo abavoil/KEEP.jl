@@ -55,11 +55,11 @@ function plot_trajectory_10D(sol; tspan=extrema(sol.t), points_per_second=DEFAUL
     A = [PM10.compute_posA(q, p) for q in q]  # *A* like tip of the *A*rm
     K1 = [PM10.compute_pos1(q, p) for q in q]  # *K* like tip of the *K*ite, computed from R and τ
     K2 = [PM10.compute_pos2(q, p) for q in q]  # *K* like tip of the *K*ite, computed from α, θ2 and φ2
-    
+
     arm_and_lines = [[0 * A, A, K1, NaN * A] for (A, K1) in zip(A, K1)]
 
     plot()
-    plot!(invert(flatten(arm_and_lines))..., c=:black, alpha=20/length(t), lw=1, label="")
+    plot!(invert(flatten(arm_and_lines))..., c=:black, alpha=20 / length(t), lw=1, label="")
     plot!(invert(A)..., label="A(α)", c=1)
     plot!(invert(K1)..., label="K1(R, τ)", c=2)
     plot!(invert(K2)..., label="K2(α, θ2, φ2)", c=3)
@@ -67,7 +67,7 @@ end
 
 function plot_trajectory_4D(sol; tspan=extrema(sol.t), points_per_second=DEFAULT_PPS)
     vbp = sol.prob.p
-    t , _= build_t(tspan, points_per_second)
+    t, _ = build_t(tspan, points_per_second)
     q = sol.(t, idxs=1:2)
     A = [vbp.l * PM4.compute_αhat(q[1]) for q in q]
     K = [PM4.compute_OK(PM4.compute_Rτ(q[1:2], vbp), vbp) for q in q]
@@ -75,7 +75,7 @@ function plot_trajectory_4D(sol; tspan=extrema(sol.t), points_per_second=DEFAULT
     arm_and_lines = [[0 * A, A, K, NaN * A] for (A, K) in zip(A, K)]
 
     plot()
-    plot!(invert(flatten(arm_and_lines))..., c=:black, alpha=20/length(t), lw=1, label="")
+    plot!(invert(flatten(arm_and_lines))..., c=:black, alpha=20 / length(t), lw=1, label="")
     plot!(invert(A)..., label="A(α)", c=1)
     plot!(invert(K)..., label="K(α, τ)", c=2)
 end
@@ -136,15 +136,8 @@ function animate_trajectory_4D(sol; tspan=extrema(sol.t), fps=DEFAULT_PPS, trail
             titlefont="monospace", title=f"t = \%.2f(t_) s / \%.2f(tf) s",
             size=figsize
         )
-    end fps=fps
+    end fps = fps
     return anim
-end
-
-function add_point_plot2d!(q, plot_vbp, plot_args...; plot_kwargs...)
-    α, τ = q
-    θ, φ = PM4.τ_to_θφ(τ, plot_vbp)
-    x, y, _ = plot_vbp.l * PM4.compute_αhat(α)
-    return plot!([0, y, φ], [0, x, θ]; plot_args..., plot_kwargs...)
 end
 
 function init_plot_eight_circle(vbp)
@@ -152,7 +145,7 @@ function init_plot_eight_circle(vbp)
     θ0 = vbp.l + vbp.r
     Δφ = θ0 * vbp.Δφ
     Δθ = vbp.Δθ * Δφ / vbp.Δφ
-    plot_vbp = build_para(θ0 = θ0, Δθ = Δθ, φ0 = 0, Δφ = Δφ)
+    plot_vbp = build_para(θ0=θ0, Δθ=Δθ, φ0=0, Δφ=Δφ)
     τ = range(-π, π, length=100)
     θ, φ = invert(PM4.τ_to_θφ.(τ, Ref(plot_vbp)))
     plot(φ, θ, aspect_ratio=:equal, color=:black, grid=false, axis=false, label="")
@@ -164,24 +157,31 @@ function init_plot_eight_circle(vbp)
 
     l = plot_vbp.l
     offset = l / 4
-    
+
     # order: y, x, φ, θ
     x_axes = [-l, -l - offset, plot_vbp.φ0 - plot_vbp.Δφ, plot_vbp.φ0 - plot_vbp.Δφ - offset]
     y_axes = [-l - offset, -l, plot_vbp.θ0 - plot_vbp.Δθ - offset, plot_vbp.θ0 - plot_vbp.Δθ]
-    
+
     u_axes = [2l, 0, 2l, 0]
     v_axes = [0, 2l, 0, 2l]
     xy_axes = hcat(x_axes, y_axes)
     uv_axes = hcat(u_axes, v_axes)
     quiver!(eachcol(xy_axes)..., quiver=Tuple(eachcol(uv_axes)), c=:black)
-    
+
     x_lbl = @. x_axes + u_axes / 2 - v_axes / 4
     y_lbl = @. y_axes + v_axes / 2 - u_axes / 4
     labels = text.(["y", "x", "φ", "θ"], :black, :center, 10)
     annotate!(x_lbl, y_lbl, labels)
     plot!([-1, -2vbp.l], alpha=0, label="")  # Else "y" is not shown
-    
+
     return (plot!(), plot_vbp)
+end
+
+function add_point_plot_eight_circle!(q, plot_vbp, plot_args...; plot_kwargs...)
+    α, τ = q
+    θ, φ = PM4.τ_to_θφ(τ, plot_vbp)
+    x, y, _ = plot_vbp.l * PM4.compute_αhat(α)
+    return plot!([0, y, φ], [0, x, θ]; plot_args..., plot_kwargs...)
 end
 
 #=
@@ -191,12 +191,12 @@ TODO:
  - draw eight_circle
 =#
 
-function add_state_to_plot_eight_circle(q, plot_vbp; fig=plot!(), plot_kwargs)
-    α, τ = q
-    θ, φ = PM4.τ_to_θφ(τ, plot_vbp)
-    x, y, _ = plot_vbp.l * PM4.compute_αhat(α)
-    plot!(fig, [0, y, φ], [0, x, θ]; m=:circle, mc=:blue, plot_kwargs...)
-end
+# function add_state_to_plot_eight_circle(q, plot_vbp; fig=plot!(), plot_kwargs)
+#     α, τ = q
+#     θ, φ = PM4.τ_to_θφ(τ, plot_vbp)
+#     x, y, _ = plot_vbp.l * PM4.compute_αhat(α)
+#     plot!(fig, [0, y, φ], [0, x, θ]; m=:circle, mc=:blue, plot_kwargs...)
+# end
 
 function plot_eight_circle(qs, vbp; plot_kwargs=())
     plot_kwargs_arr = ifelse(
@@ -228,35 +228,35 @@ Plot states on 2d phase space with indications on arm and kite positions
 Use make_links to link the symmetric states"""
 function plot_phase_space(qs; links=[[]])
     rect(x1, x2, y1, y2) = Shape(π * [x1, x1, x2, x2], π * [y1, y2, y2, y1])
-    
+
     ticks = TICKS_PI
-    
+
     plot(xlabel="α", ylabel="τ", title="Equilibriums linked to their symmetries", legend=:outerright, xticks=ticks, yticks=ticks)
-    
-    alpha_col = .1
-    alpha_pattern = .1
+
+    alpha_col = 0.1
+    alpha_pattern = 0.1
     fill_up = :/
     fill_down = nothing
     alpha_up = isnothing(fill_up) ? 0 : alpha_pattern
     alpha_down = isnothing(fill_down) ? 0 : alpha_pattern
-    plot!(rect(-.5, .5, -1, 1), c=:green, alpha=alpha_col, label="Arm towards the wind")
-    plot!(rect(-1, -.5, -1, 1), c=:red, alpha=alpha_col, label="Arm against the wind")
-    plot!(rect(.5, 1, -1, 1), c=:red, alpha=alpha_col, label="")
-    
+    plot!(rect(-0.5, 0.5, -1, 1), c=:green, alpha=alpha_col, label="Arm towards the wind")
+    plot!(rect(-1, -0.5, -1, 1), c=:red, alpha=alpha_col, label="Arm against the wind")
+    plot!(rect(0.5, 1, -1, 1), c=:red, alpha=alpha_col, label="")
+
     scatter!(invert(qs)..., c=:black, label="Equlibrium")
-    plot!(rect(-1, 1, -1, -.5), c=:black, alpha=alpha_up, fillstyle=fill_up, label="Kite above center of 8")
-    plot!(rect(-1, 1, -.5, 0), c=:black, alpha=alpha_down, fillstyle=fill_down, label="Kite below center of 8")
-    plot!(rect(-1, 1, 0, .5), c=:black, alpha=alpha_up, fillstyle=fill_up, label="")
-    plot!(rect(-1, 1, .5, 1), c=:black, alpha=alpha_down, fillstyle=fill_down, label="")
+    plot!(rect(-1, 1, -1, -0.5), c=:black, alpha=alpha_up, fillstyle=fill_up, label="Kite above center of 8")
+    plot!(rect(-1, 1, -0.5, 0), c=:black, alpha=alpha_down, fillstyle=fill_down, label="Kite below center of 8")
+    plot!(rect(-1, 1, 0, 0.5), c=:black, alpha=alpha_up, fillstyle=fill_up, label="")
+    plot!(rect(-1, 1, 0.5, 1), c=:black, alpha=alpha_down, fillstyle=fill_down, label="")
 
     ## We could use vspan/hspan but there is padding between the plot area and its axis which is ugly
     # vspan!(π * [-.5, .5], c=:green, alpha=alpha_col, label="Arm towards the wind")
     # vspan!(π * [-1, -.5, .5, 1], c=:red, alpha=alpha_col, label="Arm against the wind")
-    
+
     # hspan!(π * [-1, -.5, 0, .5], c=:black, alpha=alpha_up, fillstyle=fill_up, label="Kite above center of 8")
     # hspan!(π * [-.5, 0, .5, 1], c=:black, alpha=alpha_down, fillstyle=fill_down, label="Kite below center of 8")
 
-    return plot!(invert(links)..., c=:black, alpha=.1, lw=5, label="")
+    return plot!(invert(links)..., c=:black, alpha=0.1, lw=5, label="")
 end
 
 end  # module

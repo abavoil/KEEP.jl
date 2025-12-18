@@ -308,8 +308,8 @@ function manifold_residuals!(res, u, p)
 	res
 end
 
-function integrate(y0, tf, p, alg=Tsit5(); save_everystep=false, tol=DEFAULT_TOLERANCE, kwargs...)
-    return _integrate(dynamics!, y0, tf, p, alg; save_everystep=save_everystep, tol=tol, kwargs...)
+function integrate(u0, tf, p, alg=Tsit5(); save_everystep=false, tol=DEFAULT_TOLERANCE, kwargs...)
+    return _integrate(dynamics!, u0, tf, p, alg; save_everystep=save_everystep, tol=tol, kwargs...)
 end
 
 """

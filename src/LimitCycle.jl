@@ -30,11 +30,10 @@ using Setfield
 using Statistics: mean
 using QuasiMonteCarlo: sample, HaltonSample
 
-import KEEP: DEFAULT_TOLERANCE
+import KEEP: DEFAULT_TOLERANCE, TAU0
 import KEEP.PointMass4 as PM4
 
-export TAU0,
-    build_poincare_callback,
+export build_poincare_callback,
     distance_on_section,
     build_shooting,
     endpoint_residuals,
@@ -44,10 +43,6 @@ export TAU0,
     average_power,
     unpack_shooting,
     all_limit_cycles
-
-# Value of τ at the start of the cycle
-# const TAU0 = 3π/4
-const TAU0 = 1e-10
 
 """
 Orthogonaly projects a state to the Poincaré section."""

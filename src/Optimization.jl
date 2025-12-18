@@ -16,9 +16,9 @@ using LinearAlgebra: norm
 import ComponentArrays: ComponentArray as CA, getaxes
 
 using KEEP.PointMassPara
-import KEEP: DEFAULT_TOLERANCE
+import KEEP: DEFAULT_TOLERANCE, TAU0
 import KEEP.PointMass4 as PM4
-using KEEP.LimitCycle: compute_limit_cycle, TAU0
+using KEEP.LimitCycle: compute_limit_cycle
 
 export make_bounds, compute_dims, optimize
 

@@ -181,10 +181,16 @@ function compute_line_tension(u, p; du=PM4.dynamics(u, p, 0))
     F_tension = A_tension[:, 1] * ddα + b_tension
     return -F_tension ⋅ rhat
 end
+function create_u(α, τ, dα, dτ, W)
+	return SA[α, τ, dα, dτ, W]
+end
 
+function init_u(α, dα, dτ; τ=TAU0, W=0.0)
+	return create_u(α, τ, dα, dτ, W)
+end
 
-function integrate(y0, tf, p, alg=Tsit5(); save_everystep=false, tol=DEFAULT_TOLERANCE, kwargs...)
-    return _integrate(dynamics, y0, tf, p, alg; save_everystep=save_everystep, tol=tol, kwargs...)
+function integrate(u0, tf, p, alg=Tsit5(); save_everystep=false, tol=DEFAULT_TOLERANCE, kwargs...)
+    return _integrate(dynamics, u0, tf, p, alg; save_everystep=save_everystep, tol=tol, kwargs...)
 end
 
 
