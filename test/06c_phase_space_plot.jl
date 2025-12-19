@@ -18,7 +18,6 @@ sampler Ω1 = [0, π] × [0, 2π] (Halton)
 =#
 
 import CairoMakie as cm
-import Makie
 using LaTeXStrings
 using SplitApplyCombine
 using LinearAlgebra: norm
@@ -40,8 +39,8 @@ ddαs, ddτs = invert([f((α, τ)) for α in αs, τ in τs])
 # ticks = (-π:π:π, [L"-π", L"0", L"π"])
 
 fig = cm.Figure(fontsize=32)
-ax = Makie.Axis(fig[1,1],
-    title = "Dynamics with zero velocity",
+ax = cm.Axis(fig[1, 1],
+    title="Dynamics with zero velocity",
     xlabel=L"α", xticks=TICKS_PI,
     ylabel=L"τ", yticks=TICKS_PI
 )

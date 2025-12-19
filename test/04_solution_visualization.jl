@@ -2,7 +2,6 @@ using Setfield
 using Plots
 using StrFormat
 using StaticArrays
-using DiffEqCallbacks: ManifoldProjection
 using NonlinearSolve: NewtonRaphson, ReturnCode
 using ADTypes: AutoForwardDiff
 using LinearAlgebra: norm
@@ -14,7 +13,7 @@ using KEEP.PointMassPara
 using KEEP.TorqueFunction
 import KEEP.Visualisation as VIS
 
-include("../utils.jl")
+include("utils.jl")
 default(lw=3, formatter=:plain, label="")
 
 τ0, dτ0 = 1e-1, 0
@@ -29,7 +28,7 @@ t_small = 0:step:tf_small
 ## plot position 10d (20 s et 80 s)
 p = build_para()
 u0 = PM10.init_u(τ0, dτ0, p)
-sol10 = PM10.integrate(u0, tf, p; save_everystep=true,  tol=tol)
+sol10 = PM10.integrate(u0, tf, p; save_everystep=true, tol=tol)
 cb = PM10.build_manifold_projection(u0)
 sol10_cb = PM10.integrate(u0, tf, p; save_everystep=false, tol=tol, callback=cb)
 @test sol10.retcode == ReturnCode.Success
@@ -56,10 +55,10 @@ display(plot!())
 ## Plot position 4d (dimensionné et normalisé)
 vbp = build_vbpara(p)
 vbp_normed = normalize_vbpara(vbp)
-sol4 = PM4.integrate( SA[0.0, τ0, 0.0, dτ0, 0.0], tf, vbp; save_everystep=true)
+sol4 = PM4.integrate(SA[0.0, τ0, 0.0, dτ0, 0.0], tf, vbp; save_everystep=true)
 
 _, _, T = lmt(p)
-sol4_normed = PM4.integrate(SA[0.0, τ0, 0.0, dτ0 * T, 0.0], tf / T, vbp_normed; save_everystep=true)
+sol4_normed = PM4.integrate(SA[0.0, τ0, 0.0, dτ0*T, 0.0], tf / T, vbp_normed; save_everystep=true)
 
 VIS.plot_trajectory_4D(sol4; tspan=tf)
 fig1 = plot!(title=f"4D model, t=0..\%d(tf)s")
@@ -119,10 +118,10 @@ end
 
 using SplitApplyCombine
 
-τ0 = .1
+τ0 = 0.1
 dτ0 = 10
 u0 = SA[0.0, τ0, 0.0, dτ0, 0.0]
 sol = PM4.integrate(u0, tf, vbp; save_everystep=true)
-t = 0:.01:2
+t = 0:0.01:2
 K = invert([PM4.compute_OK(PM4.compute_Rτ(sol(t), vbp), vbp) for t in t])
 plot(t, K, label=["x" "y" "z"])

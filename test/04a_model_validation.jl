@@ -3,7 +3,6 @@
 
 using Logging
 using Test
-using DiffEqCallbacks
 using Clustering
 using Plots
 using MultivariateStats
@@ -15,7 +14,7 @@ import KEEP.PointMass10 as PM10
 import KEEP.PointMass4 as PM4
 using KEEP.PointMassPara
 
-include("../utils.jl");
+include("utils.jl");
 
 ## Create the initial state
 p = build_para()

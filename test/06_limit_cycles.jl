@@ -21,7 +21,6 @@ What should go in there :
 =#
 
 using StaticArrays: SA
-using DiffEqCallbacks: ContinuousCallback
 using Setfield
 using Test
 using Logging
@@ -86,7 +85,7 @@ If needed:
 # When integrating, it should verify α0 = αf, ...
 # This should be correct up to 2 tol: tol for u0 + tol for uf (approximation?)
 shooting = build_shooting(sol)
-@test maximum(abs, shooting_residuals(shooting, vbp; sense=-, tol=tol)) < 2tol  # It is a limit cycle with negative dτ
+@test maximum(abs, shooting_residuals(shooting, vbp; sense=-, tol=tol / 2)) < tol  # It is a limit cycle with negative dτ
 
 
 # Visualise the path

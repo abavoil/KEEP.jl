@@ -11,7 +11,7 @@ using StaticArrays
 using Plots
 using SplitApplyCombine
 using LinearAlgebra: norm
-using ProgressLogging
+using ProgressMeter
 using LaTeXStrings
 
 import KEEP.PointMass4 as PM4
@@ -106,7 +106,7 @@ function compute_results(param, value; syms, p0, sense, tol)
 end
 
 function range_optim(param, values; syms, p0, sense, tol)
-    stats_no_opt_vec, stats_opt_vec, theta_vec = invert(@progress y = [
+    stats_no_opt_vec, stats_opt_vec, theta_vec = invert(@showprogress y = [
         compute_results(param, v; syms=syms, p0=p_ref, sense=sense, tol=tol)
         for v in values
     ])

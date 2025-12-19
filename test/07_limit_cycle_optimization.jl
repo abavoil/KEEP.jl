@@ -11,7 +11,7 @@ using KEEP.Optimization
 using KEEP.Visualisation
 
 reset_torque_function!()
-include("../utils.jl")
+include("utils.jl")
 
 default(lw=3, formatter=:plain, label="")
 

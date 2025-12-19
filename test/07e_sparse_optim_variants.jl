@@ -131,7 +131,7 @@ function optimize(vbp, N, syms, lb_vbp, ub_vbp)
         (c, X) -> cons!(c, X, syms), zeros(5N + 6), zeros(5N + 6); minimize=false, backend=:generic)
 
     @info "Starting solve"
-    @time stats = ipopt(model; tol=1e-3, max_wall_time=60.)
+    stats = ipopt(model; tol=1e-3, max_wall_time=60.)
     return stats
 end
 

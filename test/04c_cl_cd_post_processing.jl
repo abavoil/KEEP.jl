@@ -33,7 +33,7 @@ tol = 1e-7
 # Line 22: u0 = init_u(...) -> likely StaticArrays.
 # Line 26: dynamics!(...) -> suggests `dynamics!` exists.
 # However, PM4.integrate abstracts this. Let's try to usage PM4.integrate(u0, tf, p; ...)
-@time sol = PM4.integrate(u0, tf, p_vb; abstol=tol, reltol=tol);
+sol = PM4.integrate(u0, tf, p_vb; abstol=tol, reltol=tol);
 
 function coeff_aero(u, p)
     begin
@@ -43,7 +43,7 @@ function coeff_aero(u, p)
         # Compute values and derivatives
         Rτ = compute_Rτ(q, p)
         OK = compute_OK(Rτ, p)
-        
+
         D_Rτ = PM4.jacobian(q_ -> compute_Rτ(q_, p), q)
         D_OK = PM4.jacobian(Rτ_ -> compute_OK(Rτ_, p), Rτ)
 

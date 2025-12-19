@@ -74,19 +74,19 @@ In practice with Tsit5 it is not needed, but you shouldn't rely on this happy be
 Also, tol should be greater than 1e-12 because of numerical errors accumulating during one cycle.
 
 Let tol_int be the tolerance used for integration. Then tol > max(10 * tol_int, 1e-12)."""
-function build_affect(tol = 10DEFAULT_TOLERANCE)
+function build_affect(tol=10DEFAULT_TOLERANCE)
     function affect!(integrator)
         u = integrator.sol.u
         length(u) < 2 && return
-        distance_on_section(u[end - 1], u[end]) > tol && return
+        distance_on_section(u[end-1], u[end]) > tol && return
         terminate!(integrator)
     end
 end
 
 """
 Return a callback that saves the states when passing through section = 0. If two subsequent states are within `tol` of each other, terminate the integration."""
-function build_poincare_callback(tol = DEFAULT_TOLERANCE; section = poincare_section)
-    ContinuousCallback((τ, t, integrator) -> section(τ), build_affect(tol); save_positions=(true, false), idxs=2, abstol=tol/10)
+function build_poincare_callback(tol=DEFAULT_TOLERANCE; section=poincare_section)
+    ContinuousCallback((τ, t, integrator) -> section(τ), build_affect(tol); save_positions=(true, false), idxs=2, abstol=tol / 10)
 end
 
 
@@ -111,11 +111,11 @@ sol contains only states that are on the Poincaré section, eg. with `build_poin
 sol -> u0, t0, t1 -> shooting"""
 function build_shooting(sol)
     u0 = sol.u[end]
-    t0, t1 = sol.t[[end-1, end]]
+    t0, t1 = sol.t[[end - 1, end]]
     return build_shooting(u0, t0, t1)
 end
 
-"""Guess whether τ is increasing or decreasing."""
+"""Guess whether τ should be increasing or decreasing."""
 default_sense(shooting) = ifelse(shooting[3] > 0, +, -)
 default_sense(u0, u1) = ifelse(u1[2] > u0[2], +, -)
 
@@ -127,7 +127,7 @@ function endpoint_residuals(u0, u1; sense=default_sense(u0, u1))
     Δτ = u1[2] - u0[2] - sense(2π)
     return SA[Δα, Δτ, Δdα, Δdτ]
 end
-endpoint_residuals(sol) = endpoint_residuals(sol.u[1], sol.u[end])
+endpoint_residuals(sol; sense=default_sense(build_shooting(sol))) = endpoint_residuals(sol.u[1], sol.u[end]; sense)
 
 """
 Compute the residuals of a limit cycle from a shooting by integrating. Specify
@@ -135,9 +135,9 @@ Compute the residuals of a limit cycle from a shooting by integrating. Specify
 Sense is either `+` or `-`, the expected sign of dτ."""
 function shooting_residuals(shooting, vbp; sense=default_sense(shooting), tol=DEFAULT_TOLERANCE)
     u0, T = unpack_shooting(shooting)
-    res = endpoint_residuals(PM4.integrate(u0, T, vbp; tol=tol/10))
+    res = endpoint_residuals(PM4.integrate(u0, T, vbp; tol=tol / 10); sense=sense)
     if maximum(abs, res) < tol
-        @warn "shooting_residuals: Residuals are too low compared to integration tolerance `tol`, it is recommended to reduce `tol` to increase accuracy."
+        @warn "LimitCycle.jl:shooting_residuals: Residuals are too low compared to integration tolerance `tol`, it is recommended to reduce `tol` to increase accuracy."
     end
     return res
 end
